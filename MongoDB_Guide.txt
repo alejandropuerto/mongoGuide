@@ -30,3 +30,17 @@ Comandos más básicos de MongoDB
 		"ratings": {"strength": 2, "flavor": 5}
 	})
 
+## We can delete a document using remove() if it matches with some parameter that we specify:
+	> db.potions.remove({"name": "Love"}) #The parameter is name.
+
+## We use update() to apply changes to some values of our document's fields:
+	> db.potions.update({"name": "Love"}, {"$set": {"price": 3.99}}) #The price value is updated using "$set" to specify the field that we are going to update. If we do not use "$set", all the fields will be updated but the ids of the document.
+
+## We can use "multi" parameter with update() to modify all matching documents:
+	> db.potions.update({"vendor": "KC"}, {"$set": {"vendor": "Kettlecooked"}}, {"multi": true})
+
+## We create a log document to record the views or clicks on it by adding the "count" field:
+	> db.logs.update({"potion": "Shrinking"}, {"$inc": {"count": 1}}) #With "$inc" we increase the count of an existing log document and updates or creates the count field if exists or not.
+
+## We can use "upsert" parameter with update() to create a new document usign the parameters of the query. It is used with the log document query:
+	> db.logs.update({"potion": "Love"}, {"$inc": {"count": 1}}, {"upsert": true}) #If upsert is true, it creates a new document; if not, then updates the existing log document.
