@@ -1,0 +1,32 @@
+Comandos más básicos de MongoDB
+
+## Define variables: 
+> var potion = {
+	"name": "Invisibility", # Each field is separated by a comma 
+	"vendor": "Kettlecooked"
+	}
+
+## Access the variable to see it content:
+> potion
+
+## Inserting fields and/or values in a collection. The collection will be created automatically when we first insert a document.
+> db.potions.insert({ "name": "Invisibility", "vendor": "Kettlecooked" })
+
+## We use find() to get the info about the documents in the collection:
+> db.potions.find()
+
+## When we insert a document, the id can be specified by us or it can be generated automatically by mongo.
+
+## We use find() and adding the field and its value to perform a query to see the info of the search:
+> db.potions.find({ "name": "Invisibility" })
+
+## We can add price, score, date, lists, and embedded documents:
+> db.potions.insert(
+	{
+		"price": 10.99,
+		"score": 59,
+		"tryDate": new Date(2012, 8, 13) #Format: (Year, Month, Day)
+		"ingredients": ["new toes", 42, "laughter"],
+		"ratings": {"strength": 2, "flavor": 5}
+	})
+
