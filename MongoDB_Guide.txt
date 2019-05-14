@@ -22,10 +22,11 @@ Comandos más básicos de MongoDB
 
 ## We can add price, score, date, lists, and embedded documents:
 > db.potions.insert(
-	{
+	{	"name": "Invisibility", 
+		"vendor": "Kettlecooked",
 		"price": 10.99,
 		"score": 59,
-		"tryDate": new Date(2012, 8, 13) #Format: (Year, Month, Day)
+		"tryDate": new Date(2012, 8, 13), #Format: (Year, Month, Day)
 		"ingredients": ["new toes", 42, "laughter"],
 		"ratings": {"strength": 2, "flavor": 5}
 	})
@@ -44,3 +45,22 @@ Comandos más básicos de MongoDB
 
 ## We can use "upsert" parameter with update() to create a new document usign the parameters of the query. It is used with the log document query:
 	> db.logs.update({"potion": "Love"}, {"$inc": {"count": 1}}, {"upsert": true}) #If upsert is true, it creates a new document; if not, then updates the existing log document.
+
+## We can remove fields that we don't need using the parameter "$unset" along with update():
+	> db.potions.update({}, {"$unset":{"color":""}}, {"multi":true}) ## The color field is removed
+##Also we can rename fields:
+	> db.potions.update({}, {"$rename": {"score": "grade"}}, {"multi": true}) ##The score field is renamed with grade.
+
+##To update a value of an array, we use "$set", but we have to specify the position of the value in the array of a single document as follows:
+	> db.potions.update({"name": "Shrinking"}, {"$set": {"ingredients.1": 42}}) ##The value of the array in position 1 will change to 42.
+
+## To update the value of different positions in the array of more than 1 document, we use a palceholder instead of the number of the position in the array:
+	> db.potions.update({"ingredients": "secret"}, {"$set": {"ingredients.$": 42}}, {"multi": true}) ##We have to specify the query that we want to make the change, in this case, the query is the secret ingredient.
+
+##To change values of embedded documents or dictionaries, it is similar, but instead of specify the number, we specify the name of the field:
+	> db.potions.update({"name": "Shrinking"}, {"$set": {"ratings.strength": 5}})
+
+## Useful operators for using with update():
+	$max - Updates if new value is greater than current or inserts if empty.
+	$min - Updates if new value is less than current or inserts if empty.
+	$mul - Multiplies current field value by specified value. If empty, inserts 0.
