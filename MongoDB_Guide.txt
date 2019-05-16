@@ -64,3 +64,18 @@ Comandos más básicos de MongoDB
 	$max - Updates if new value is greater than current or inserts if empty.
 	$min - Updates if new value is less than current or inserts if empty.
 	$mul - Multiplies current field value by specified value. If empty, inserts 0.
+
+## To remove the first or last value of an array we use "$pop" with update():
+	> db.potions.update({"name": "Shrinking"}, {"$pop": {"categories": 1}}) // 1 removes the last element, and -1 the first one
+
+## To add a value at the end of the array, we use "$push" and the value is added at the end:
+	> db.potions.update({"name": "Shrinking"}, {"$push": {"categories": "budget"}})
+
+## To add a unique value to an array, we use "$addToSet" and it add a value if it is not already in the array:
+	> db.potions.update({"name": "Shrinking"}, {"$addToSet": {"categories": "budget"}})
+
+## To remove any value and its instances (if not unique) from the array, we use "$pull":
+	> db.potions.update({"name": "Shrinking"}, {"$pull": {"categories": "tasty"}})
+
+### Filters - Query Operators ###
+
