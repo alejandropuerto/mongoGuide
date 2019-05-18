@@ -79,3 +79,27 @@ Comandos más básicos de MongoDB
 
 ### Filters - Query Operators ###
 
+## To query with multiple criteria, we use find() in comma-separated query:
+	> db.potions.find({"vendor": "Kettlecooked", "ratings.strength": 5}) //In this case, it will only show potions made by Kettlecooked that have strength of 5.
+
+## Conditions - Common comparisons ##
+	$gt - greater than
+	$gte - greater than or equal to
+	$lt - less than
+	$lte - less than or equal to
+	$ne - not equal to
+//Some examples
+//Finding potions that are less than $20
+	> db.potions.find({"price": {"$lt": 20}}) //price less than 20
+//Finding potions between prices
+	> db.potions.find({"price": {"$gt":10,"$lt":20}}) //price greater than 10 and less than 20
+//Queries of non-equality
+	> db.potions.find({"vendor": {"$ne": "Brewers"}}) //vendor not equal to "brewers"
+//Range queries on an array
+	> db.potions.find({"sizes": {"$elemMatch": {"gt": 8, "lt": 16}}}) // at least 1 value in an array must be greater than 8 and less than 16
+
+
+
+
+### Most asked questions ###
+
