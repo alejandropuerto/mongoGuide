@@ -100,6 +100,100 @@ Comandos más básicos de MongoDB
 
 
 
+/*
+### FAQ MongoDB ###
 
-### Most asked questions ###
+1. What is ObjectId composed of?
+	ObjectId in MongoDB is a 12-byte BSON type which has all the following:
+ 	    -4-byte value representing seconds/Timestamp
+	    -3-byte Client machine ID
+	    -2-byte Client process ID
+	    -3 byte incremented counter
 
+2. What is "namespace" in MongoDB?
+	MongoDB stores BSON (Binary Interchange and Structure Object Notation) objects in the collection. The concatenation of the collection name and database name is called a namespace. 
+
+3. Where can we use MongoDB?
+	There are mainly 3 uses of MongoDB:
+	    -We use MongoDB as the primary data store for operational applications with real-time requirements. MongoDB is fit to use for 60%-80% of the applications that are developing in today’s world. It is easy to operate and scale in ways that are hard.
+
+	    -MongoDB is very helpful in many cases where the relational database is not fit for its usage, like scenarios where we want to use unstructured, semi-structured and polymorphic data, it is also fit to be used for applications with large scalability requirements or multi-data center deployments.
+
+	    -Some common places where MongoDB examples include are mobile apps, product catalog, real-time personalization, content management and applications built around the relational data model and SQL.
+
+4. Differences between MongoDB and MySQL?
+	Both these databases are free and open source. There is a lot of difference between these two databases in terms of data representation, relationship, transaction, querying data, schema design and definition, performance speed, normalization and many more. The speed in which your queries are being processed in MongoDB is fast as compared to MySQL. The way in which data is being represented in MongoDB and MySQL is also very different. MySQL has only structured and table formatted data whereas MongoDB is having unstructured and comma separated data in them.
+
+5. How to use the primary key in MongoDB?
+	_id field is reserved for the primary key in MongoDB, and that is a unique value. If you don’t set anything to _id it will automatically fill it with “MongoDB Id Object”. But you can put any unique info in that field.
+
+6. How to delete everything from the MongoDB database?
+	For deleting everything from the MongoDB database, you can use the following code:
+	    use [database];
+	    db.dropDatabase();
+	    Ruby code should be pretty similar.
+	    Also, from the command line:
+	    mongo [database] –eval “db.dropDatabase();”
+	    Use
+	    [databaseName]
+	    db.Drop+databaseName();
+	    drop collection
+	    use databaseName
+	    db.collectionName.drop();
+
+7. Explain about replication and when should we use it?
+	 Replication is the process of synchronizing data across multiple servers so that data is not lost in any condition. It gives redundancy and rises data availability with many copies of data on other database servers. We can use it for various purposes like for keeping the data safe, for high availability of data, disaster recovery and in no downtime for maintenance.
+
+8. How to update _id of one MongoDB Document?
+	You’ll have to save the document using a new _id, and then remove the old document.
+	    // store the document in a variable
+	    doc = db.clients.findOne({_id: ObjectId(“4cc45467c55f4d2d2a000002”)})
+	    // set a new _id on the document
+	    doc._id = ObjectId(“4c8a331bda76c559ef000004”)
+	    // insert the document, using the new _id
+	    db.clients.insert(doc)
+	    // remove the document with the old _id
+	    db.clients.remove({_id: ObjectId(“4cc45467c55f4d2d2a000002”)})
+	To do it for your whole collection you can also use a loop
+		    db.status.find().forEach(function(doc){ var id=doc._id; doc._id=doc.UserId; db.status.insert(doc); db.status.remove({_id:id});})
+	In this case, UserId was the new ID I wanted to use
+
+9. PHP with MongoDB, doubt with consulting
+	We need to cast the variable, because mongo infers the data type:
+		$edades = $bd->command(
+			array(
+	    		"distinct" => "personas",
+	    		"key"      => "edad",
+	    		"query"    => array("edad" => array('$gte' => intval($num) ))
+	  		)
+		);
+
+10. What is the size limit of a document on MongoDB?
+	MongoDB allows only 16 MB for each document
+
+11. How many indexes by default we can create for a new collection in MongoDB?
+	By default, MongoDB created the _id collection for each and every collection.
+
+12. Explain about GridFS in MongoDB.
+	 GridFS is a specification for storage and retrieval of files that crosses the BSON document size limit of 16MB. Instead of storing all files in a single document GridFS divides a file into small parts or chunks and stores each chunk as a separate document.
+
+13. Which languages are being supported by MongoDB?
+	The languages being supported by MongoDB are C, C++, C#, Java, Node.js, Perl, PHP, Python, Ruby, Scala, Go and Erlang. All these languages are having driver support from MongoDB.
+
+14. By what reason is MongoDB the best?
+	MongoDB is considered to be the best NoSQL database because of the following points:
+	    -Document-oriented
+	    -High Performance
+	    -High Availability
+	    -Easy Scalability
+	    -Rich query languages
+
+15. Explain why MongoDB data files are large in size?
+	MongoDB doesn’t follow file system fragmentation and pre-allocates data files to reserve space while setting up the server. That’s why MongoDB data files are large in size.
+
+References:
+https://data-flair.training/blogs/mongodb-interview-questions/
+https://data-flair.training/blogs/interview-questions-for-mongodb/
+https://www.guru99.com/mongodb-interview-questions.html
+https://es.stackoverflow.com/questions/16551/php-con-mongo-dudas-con-consultas/16614#16614
+*/
