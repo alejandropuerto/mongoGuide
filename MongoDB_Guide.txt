@@ -1,93 +1,94 @@
-Comandos más básicos de MongoDB
+/*Comandos más básicos de MongoDB*/
 
-## Define variables: 
+// Define variables: 
 > var potion = {
-	"name": "Invisibility", # Each field is separated by a comma 
+	"name": "Invisibility", // Each field is separated by a comma 
 	"vendor": "Kettlecooked"
 	}
 
-## Access the variable to see it content:
+// Access the variable to see it content:
 > potion
 
-## Inserting fields and/or values in a collection. The collection will be created automatically when we first insert a document.
+// Inserting fields and/or values in a collection. The collection will be created automatically when we first insert a document.
 > db.potions.insert({ "name": "Invisibility", "vendor": "Kettlecooked" })
 
-## We use find() to get the info about the documents in the collection:
+// We use find() to get the info about the documents in the collection:
 > db.potions.find()
 
-## When we insert a document, the id can be specified by us or it can be generated automatically by mongo.
+// When we insert a document, the id can be specified by us or it can be generated automatically by mongo.
 
-## We use find() and adding the field and its value to perform a query to see the info of the search:
+// We use find() and adding the field and its value to perform a query to see the info of the search:
 > db.potions.find({ "name": "Invisibility" })
 
-## We can add price, score, date, lists, and embedded documents:
+// We can add price, score, date, lists, and embedded documents:
 > db.potions.insert(
 	{	"name": "Invisibility", 
 		"vendor": "Kettlecooked",
 		"price": 10.99,
 		"score": 59,
-		"tryDate": new Date(2012, 8, 13), #Format: (Year, Month, Day)
+		"tryDate": new Date(2012, 8, 13), /*Format: (Year, Month, Day)*/
 		"ingredients": ["new toes", 42, "laughter"],
 		"ratings": {"strength": 2, "flavor": 5}
 	})
 
-## We can delete a document using remove() if it matches with some parameter that we specify:
-	> db.potions.remove({"name": "Love"}) #The parameter is name.
+// We can delete a document using remove() if it matches with some parameter that we specify:
+	> db.potions.remove({"name": "Love"}) //The parameter is name.
 
-## We use update() to apply changes to some values of our document's fields:
-	> db.potions.update({"name": "Love"}, {"$set": {"price": 3.99}}) #The price value is updated using "$set" to specify the field that we are going to update. If we do not use "$set", all the fields will be updated but the ids of the document.
+// We use update() to apply changes to some values of our document's fields:
+	> db.potions.update({"name": "Love"}, {"$set": {"price": 3.99}}) //The price value is updated using "$set" to specify the field that we are going to update. If we do not use "$set", all the fields will be updated but the ids of the document.
 
-## We can use "multi" parameter with update() to modify all matching documents:
+// We can use "multi" parameter with update() to modify all matching documents:
 	> db.potions.update({"vendor": "KC"}, {"$set": {"vendor": "Kettlecooked"}}, {"multi": true})
 
-## We create a log document to record the views or clicks on it by adding the "count" field:
-	> db.logs.update({"potion": "Shrinking"}, {"$inc": {"count": 1}}) #With "$inc" we increase the count of an existing log document and updates or creates the count field if exists or not.
+// We create a log document to record the views or clicks on it by adding the "count" field:
+	> db.logs.update({"potion": "Shrinking"}, {"$inc": {"count": 1}}) //With "$inc" we increase the count of an existing log document and updates or creates the count field if exists or not.
 
-## We can use "upsert" parameter with update() to create a new document usign the parameters of the query. It is used with the log document query:
-	> db.logs.update({"potion": "Love"}, {"$inc": {"count": 1}}, {"upsert": true}) #If upsert is true, it creates a new document; if not, then updates the existing log document.
+// We can use "upsert" parameter with update() to create a new document usign the parameters of the query. It is used with the log document query:
+	> db.logs.update({"potion": "Love"}, {"$inc": {"count": 1}}, {"upsert": true}) //If upsert is true, it creates a new document; if not, then updates the existing log document.
 
-## We can remove fields that we don't need using the parameter "$unset" along with update():
-	> db.potions.update({}, {"$unset":{"color":""}}, {"multi":true}) ## The color field is removed
-##Also we can rename fields:
-	> db.potions.update({}, {"$rename": {"score": "grade"}}, {"multi": true}) ##The score field is renamed with grade.
+// We can remove fields that we don't need using the parameter "$unset" along with update():
+	> db.potions.update({}, {"$unset":{"color":""}}, {"multi":true}) // The color field is removed
+//Also we can rename fields:
+	> db.potions.update({}, {"$rename": {"score": "grade"}}, {"multi": true}) //he score field is renamed with grade.
 
-##To update a value of an array, we use "$set", but we have to specify the position of the value in the array of a single document as follows:
-	> db.potions.update({"name": "Shrinking"}, {"$set": {"ingredients.1": 42}}) ##The value of the array in position 1 will change to 42.
+//To update a value of an array, we use "$set", but we have to specify the position of the value in the array of a single document as follows:
+	> db.potions.update({"name": "Shrinking"}, {"$set": {"ingredients.1": 42}}) //The value of the array in position 1 will change to 42.
 
-## To update the value of different positions in the array of more than 1 document, we use a palceholder instead of the number of the position in the array:
-	> db.potions.update({"ingredients": "secret"}, {"$set": {"ingredients.$": 42}}, {"multi": true}) ##We have to specify the query that we want to make the change, in this case, the query is the secret ingredient.
+// To update the value of different positions in the array of more than 1 document, we use a palceholder instead of the number of the position in the array:
+	> db.potions.update({"ingredients": "secret"}, {"$set": {"ingredients.$": 42}}, {"multi": true}) //We have to specify the query that we want to make the change, in this case, the query is the secret ingredient.
 
-##To change values of embedded documents or dictionaries, it is similar, but instead of specify the number, we specify the name of the field:
+//To change values of embedded documents or dictionaries, it is similar, but instead of specify the number, we specify the name of the field:
 	> db.potions.update({"name": "Shrinking"}, {"$set": {"ratings.strength": 5}})
 
-## Useful operators for using with update():
+/* Useful operators for using with update():
 	$max - Updates if new value is greater than current or inserts if empty.
 	$min - Updates if new value is less than current or inserts if empty.
-	$mul - Multiplies current field value by specified value. If empty, inserts 0.
+	$mul - Multiplies current field value by specified value. If empty, inserts 0. */
 
-## To remove the first or last value of an array we use "$pop" with update():
+// To remove the first or last value of an array we use "$pop" with update():
 	> db.potions.update({"name": "Shrinking"}, {"$pop": {"categories": 1}}) // 1 removes the last element, and -1 the first one
 
-## To add a value at the end of the array, we use "$push" and the value is added at the end:
+// To add a value at the end of the array, we use "$push" and the value is added at the end:
 	> db.potions.update({"name": "Shrinking"}, {"$push": {"categories": "budget"}})
 
-## To add a unique value to an array, we use "$addToSet" and it add a value if it is not already in the array:
+// To add a unique value to an array, we use "$addToSet" and it add a value if it is not already in the array:
 	> db.potions.update({"name": "Shrinking"}, {"$addToSet": {"categories": "budget"}})
 
-## To remove any value and its instances (if not unique) from the array, we use "$pull":
+// To remove any value and its instances (if not unique) from the array, we use "$pull":
 	> db.potions.update({"name": "Shrinking"}, {"$pull": {"categories": "tasty"}})
 
-### Filters - Query Operators ###
+/* Filters - Query Operators */
 
-## To query with multiple criteria, we use find() in comma-separated query:
+// To query with multiple criteria, we use find() in comma-separated query:
 	> db.potions.find({"vendor": "Kettlecooked", "ratings.strength": 5}) //In this case, it will only show potions made by Kettlecooked that have strength of 5.
 
-## Conditions - Common comparisons ##
+// Conditions - Common comparisons
 	$gt - greater than
 	$gte - greater than or equal to
 	$lt - less than
 	$lte - less than or equal to
 	$ne - not equal to
+	
 //Some examples
 //Finding potions that are less than $20
 	> db.potions.find({"price": {"$lt": 20}}) //price less than 20
@@ -97,6 +98,31 @@ Comandos más básicos de MongoDB
 	> db.potions.find({"vendor": {"$ne": "Brewers"}}) //vendor not equal to "brewers"
 //Range queries on an array
 	> db.potions.find({"sizes": {"$elemMatch": {"gt": 8, "lt": 16}}}) // at least 1 value in an array must be greater than 8 and less than 16
+
+// To specify what values or fields do we want to get back when performing find():
+	> db.mongo.find({"grade": {"$gte": 80}}, {"vendor": true, "name": true}) //this will get back only the vendor and name fields, as well as the id field, unless we set false in the id field.
+	> db.mongo.find({"grade": {"$gte": 80}}, {"vendor": true, "name": true, "_id": false}) //this will not get back the id.
+	> db.mongo.find({"grade": {"$gte": 80}}, {"vendor": false, "price": false}) // this will exclude the vendor and price fields from getting back.
+	//we cannot set true and false fields at the same time, because it will cause an error; the only case we will performed this, is when we want either to include or exclude the id field.
+
+//When we use find(), and there are more than 20 documents, we type "it" to view the next 20 documents, because MongoDB only displays 20 each time.
+
+//To know how many documents we have, we can use count() along with find() to know it:
+	> db.potions.find().count()
+
+// To sort our documents, we use the cursor method sort(), and inside we specify the field wich we want to sort:
+	> db.potions.find().sort({"price": 1}) //-1 is to order descending, and 1 is to order ascending. In this case, the potions will be sorted by price in ascending order.
+
+//We can limit the number of documents we get back when performing find():
+	> db.potions.find().limit(3) //in this case, we will only see the first 3 documents.
+
+// We can skip docuements when displaying them:
+	> db.potions.find().skip(3) // the first 3 documents will be skipped, and we will see the documents after the first 3.
+
+//We can use skip and limit at the same time:
+	> db.potions.find().skip(3).limit(3)
+
+
 
 
 
