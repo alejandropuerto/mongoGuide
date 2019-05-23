@@ -88,7 +88,7 @@
 	$lt - less than
 	$lte - less than or equal to
 	$ne - not equal to
-	
+
 //Some examples
 //Finding potions that are less than $20
 	> db.potions.find({"price": {"$lt": 20}}) //price less than 20
@@ -123,6 +123,16 @@
 	> db.potions.find().skip(3).limit(3)
 
 
+/* Data Modeling */
+
+//We use arrays to hold multiple values of a field.
+//We can insert more data of a field, for example, a vendor; and this can be done by inserting the data as an embedded document. For example: {"id": objectid(), "name": "Invisivility", "vendor": {"name": "Kettlecooked",, "phone": 5555555, "organic": true}}
+// To avoid having duplicate information, in this case, vendor, we can create a vendors collection and reference the vendor document in each potion document. This will convert the id object numbers, into the name of the vendor.
+	> db.vendors.insert({"_id": "Kettlecooked", "phone": 555555555, "organic": true}) //We can specify the unique _id of document
+	> db.potions.insert({"name": "Invisibility", "vendor_id": "Kettlecooked"}) //Here we reference the vendor document into the potion document.
+/*Querying a referenced document */
+	>db.potions.find({"name": "Invisibility"}) //We get the potion information & we get the vendor _id
+	> db.potions.find({"_id": "kettlecooked"}) // We get the vendor information
 
 
 
