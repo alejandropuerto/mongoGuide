@@ -134,6 +134,33 @@
 	>db.potions.find({"name": "Invisibility"}) //We get the potion information & we get the vendor _id
 	> db.potions.find({"_id": "kettlecooked"}) // We get the vendor information
 
+/* Common aggregations */
+
+	> db.potions.aggregate([{"$group": {"_id": "$vendor_id"}}]) // this will group the potions per vendor. In this case, only the vendors' id will be displayed.
+	> db.potions.aggregate([{"$group": {"_id": "$vendor_id", "total": {"$sum": 1}}}]) // In this case wil display the total number of potions per vendor. The {"$sum":1} will add 1 everytime it matches a document, it is like an accumulator.
+//When fields begin with "$", they represent operators that perform a task.
+//When values begin with "$", they represent field paths that point to the value.
+
+	> db.potions.aggregate([{"$group": {"_id": "$vendor_id", "total": {"$sum":1}, "grade_total": {"$sum": "$grade"}}}]) // In this case, the "$grade" will take the matched value in order to be sumed by the operator "$sum" to give the result for total grade. Sums the grade values for potions in their group.
+
+	> db.potions.aggregate([{"$group": {"_id": "$vendor_id", "avg_grade": {"$avg": "$grade"}}}]) // In this case, the operator "$avg" is for calculate the average of the potion grades per ventor.
+
+	> db.potions.aggregate([{"$group": {"_id": "$vendor_id", "max_grade": {"$max": "$grade"}, "min_grade": {"$min": "$grade"}}}]) //In this case, it will return the maximum and minimum grade per vendor usign "$max", and "$min".
+
+/* The aggregation pipeline */
+
+//The aggregate method can act like a pipeline that is is divided by stages. It passes from one stage to another. It modifies the working data set and then passes to the next stage until we get our desired result.
+
+> db.potions.aggregate([{"$match": {"ingredients": "unicorn"}}, {"$group": {"_id": "$vendor_id", "potion_count": {"$sum":1}}}]) // There are two stages separated with a comma. The first one is to find the unicorn ingrediente and get their vendor and how many potions per vendor.
+
+> db.potions.aggregate([
+	{"$match": {"price": {"$lt": 15}}}, /*It will match the potions that cost less than 15 */
+	{"$project": {"_id": false, "vendor_id": true, "grade": true}}, /*It will select the fields we want to be displayed */
+	{"group": {"_id": "$vendor_id", "avg_grade": {"$avg": ""$grade}}}, /*It will group the results with average per vendor */
+	{"$sort": {"avg_grade": -1}}, /* It will sort the results of the average grade in descending order */
+	{"limit": 3}, /* It will display only the first 3 results. */
+])
+
 
 
 /*
